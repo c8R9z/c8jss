@@ -22,3 +22,14 @@ let fruits=['banana', 'cherry', 'apple', 'pear'];
 for (let i=0; i<fruits.length; i++){
     console.log(fruits[i])
 }
+
+let object = {
+    name: 'Chris',
+    age: 17,
+    eyes: 'Brown'
+}
+
+for(const property in object){
+    console.log(property);
+    console.log(object[property])
+}
