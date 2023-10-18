@@ -43,7 +43,7 @@ if(num > 10){
     console.log('väiksem')
 }
 
-let day = new Date('2024-05-19').getDay();
+let day = new Date('2023-10-18').getDay();
 console.log(day);
 
 switch(day){
@@ -70,4 +70,18 @@ switch(day){
         break;
     default:
         console.log('Weirdday')
+}
+
+for(let i=1;i<=200;i++){
+    let answer = '';
+    if(i%5===0){
+        answer += 'Foo';
+    }
+    if(i%7===0){
+        answer += 'Bar';
+    }
+    if (answer === ''){
+        answer = i;
+    }
+    console.log(answer);
 }
