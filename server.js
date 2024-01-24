@@ -9,17 +9,17 @@ nunjucks.configure('views', {
 });
 
 
-app.get('/', (reg, res) => {
+app.get('/', (req, res) => {
     res.render('index.njk');
 });
 
-app.get('/page2', (reg, res) => {
+app.get('/page2', (req, res) => {
     res.render('page2.njk');
 });
 
-app.get('/form', (reg, res) => {
+app.get('/form', (req, res) => {
     console.log(req.query)
-    res.render('form.njk');
+    res.render('form.njk', req.query);
 });
 
 app.listen(port, () => {
