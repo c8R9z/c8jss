@@ -1,36 +1,85 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-router.get('/', (req, res) => {
-    if(!fs.existsSync('movies.json')){
-        let json = {
-            lastId: 0,
-            movies: []
-        };
-        json = JSON.stringify(json);
-        fs.writeFileSync('movies.json', json);
-    }
-    let movies = fs.readFileSync('movies.json', 'utf-8');
-    movies = JSON.parse(movies);
-    res.render('movies/index.njk',{movies: movies.movies});
-});
+const {Sequelize, QueryTypes } = require('sequelize');
+const { Z_ASCII } = require('zlib');
+let sequelize = new Sequelize('sqlite:db.sqlite');
 
-router.get('/add', (req, res) => {
-    res.render('movies/add.njk');
+const Movie = sequelize.define('Movie', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        year: {
+            type: DataTypes.INTEGER,
+            allowMull: false,
+        },
+        description: {
+            type: DataTypes.TEXT
+        }
+    }, {tableName: 'movies', timestamps:false});
+
+router.get('/', async (req, res) => {
+    let movies = await Movie.findAll();
+    res.render('movies/index.njk',{movies: movies});
 });
 
 router.post('/add', (req, res) => {
-    let movies = fs.readFileSync('movies.json', 'utf-8');
-    movies = JSON.parse(movies);
-    movies.movies.push({
-        id: movies.lastId++,
+    res.render('movies/add.njk');
+});
+
+router.post('/add', async (req, res) => {
+    await Movie.create({
         name: req.body.movie,
         year: req.body.year,
         description: req.body.description
     });
-    let json = JSON.stringify(movies);
-    fs.writeFileSync('movies.json', json);
-    res.redirect('/movies/');
+    res.redirect('/movies')
 });
 
-module.exports = router;
+router.get('/view', async (req, res) => {
+    let movie = await Movie.findOne({
+        where: {
+            id: req.query.id
+        }
+    });
+    res.render('movies/view.njk')
+});
+
+router.get('/edit/:id', async (req, res) =>{
+    let  movie  = await Movie.findOne({
+        where: {
+            id: req.params.id
+        }
+    });
+    res.render('movies/edit.njk', {movie: movie});
+});
+
+router.post('/edit/:id', async (req,res) => {
+    await Movie.update({
+        name: req.body.movie,
+        year: req.body.year,
+        description: req.body.description
+    },{
+        where: {
+            id: req.params.id
+        }
+    });
+    res.redirect('/movies/')
+});
+
+router.get('/delete/:id', async (req, res) => {
+    await Movie.destroy({
+        where: {
+            id: req.params.id
+        }
+    });
+    res.redirect('/movies')
+})
+
+module.exports = router
