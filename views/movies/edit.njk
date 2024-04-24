@@ -1,10 +1,18 @@
 {% extends "partials/layout.njk" %}
-{% block title %}Add movie{% endblock %}
+{% block title %}Edit movie{% endblock %}
 {% block content %}
-  <form action="/movies/edit/{{movie.id}}" method="POST">
-    <input type="text" placeholder="Movie name" name="movie" value="{{movie.name}}">
-    <input type="number" placeholder="Movie year" name="year" value="{{movie.year}}">
-    <textarea name="description" placeholder="Movie description">{{movie.description}}</textarea>
-    <input type="submit" value="Update">
-  </form>
+  <div class="container">
+    <form action="/movies/edit/{{ movie.id }}" method="POST">
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Movie name" name="movie" value="{{ movie.name }}">
+      </div>
+      <div class="mb-3">
+        <input type="number" class="form-control" placeholder="Movie year" name="year" value="{{ movie.year }}">
+      </div>
+      <div class="mb-3">
+        <textarea class="form-control" name="description" placeholder="Movie description">{{ movie.description }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
 {% endblock %}
