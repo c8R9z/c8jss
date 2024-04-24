@@ -39,7 +39,7 @@ app.post('/circle', (req, res) => {
     });
   });
 
-const movieController = require('./scr/movieController.js');
+const movieController = require('./src/movieController.js');
 app.use('/movies', movieController);
 
 
